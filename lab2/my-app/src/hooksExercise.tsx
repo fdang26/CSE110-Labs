@@ -18,10 +18,6 @@ import { ThemeContext, themes } from "./themeContext";
 function ClickCounter() {
   const [count, setCount] = useState(0);
 
-  const handleClick = () => {
-    setCount(count + 1);
-  };
-
   useEffect(() => {
     document.title = `You clicked ${count} times`;
   }, [count]);
