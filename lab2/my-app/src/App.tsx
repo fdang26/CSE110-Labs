@@ -88,15 +88,16 @@ function App() {
     }
   }
 
+  // Removes the note from the list of notes and from the favorites list if its also in there
   const deleteNoteHandler = (id: number) => {
-    setNotes(notes.filter((note) => note.id !== id));
     const noteToRemove = notes.find( (note) => note.id === id);
     if(noteToRemove){
       removeFromFavorites(noteToRemove.title);
-    } 
+    } // remove from favorites list before removing from notes list because we need notes list to find note.title
+    setNotes(notes.filter((note) => note.id !== id));
   }
 
-  // JSX
+  /** --------------- JSX Below -------------------*/
   return (
     <FavListContext.Provider
       value={{ favorites, addToFavorites, removeFromFavorites }}
