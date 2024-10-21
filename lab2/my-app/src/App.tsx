@@ -9,6 +9,11 @@ import { FavListContext } from "./favListContext";
 import { ThemeContext, themes } from "./themeContext";
 
 function App() {
+  // first implement onclick for each note, then for each onclick, update selectedNote state variable to contain that notes information and populate the form
+  // fields with the notes contents (with having an empty note by default (useState(emptyNote))); there should be a flag based on whether the id of
+  // is -1 or not (creating or updating) that impacts whether the onSubmit should create new or replace old
+  // to replace old find the note in the list through the id and then place the new note into that spot
+
   // Favoriting and favorites list: state(list of favorites) and methods to add and remove
   const [favorites, setFavorites] = useState<string[]>([]);
 
@@ -85,7 +90,12 @@ function App() {
 
   const deleteNoteHandler = (id: number) => {
     setNotes(notes.filter((note) => note.id !== id));
+    const noteToRemove = notes.find( (note) => note.id === id);
+    if(noteToRemove){
+      removeFromFavorites(noteToRemove.title);
+    } 
   }
+
   // JSX
   return (
     <FavListContext.Provider
