@@ -1,18 +1,16 @@
 import { useContext } from "react";
+import { FavListContext } from "./favListContext";
 
-interface favoriteListProps {
-    favorites: Array<string>;
-  }
-  
-const FavoriteList: React.FC<favoriteListProps> = ({ favorites }) => {
-    return(
-        <div>
-            <h1>List of Favorites:</h1>
-            {favorites.map((item) => (
-                <li>{item}</li>
-            ))}
-        </div>
-    )
-  };
+function FavoriteList() {
+  const { favorites } = useContext(FavListContext);
+  return (
+    <div>
+      <h1>List of Favorites:</h1>
+      {favorites.map((item) => (
+        <li>{item}</li>
+      ))}
+    </div>
+  );
+}
 
-  export default FavoriteList;
+export default FavoriteList;

@@ -6,10 +6,11 @@ import { dummyNotesList } from "./constants"; // Import the dummyNotesList from 
 import ToggleTheme from "./hooksExercise";
 import FavoriteButton from "./favoriteButton";
 import FavoriteList from "./favoriteList";
-import { FavListContext } from "./context";
+import { FavListContext } from "./favListContext";
+import { ThemeContext, themes } from "./themeContext";
 
 function App() {
-  const [favorites, setFavorites] = useState<string[]>([]); 
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   const addToFavorites = (noteTitle: string) => {
     const newFavorites = [...favorites];
@@ -21,47 +22,67 @@ function App() {
     const newFavorites = [...favorites];
     const index = newFavorites.indexOf(noteTitle);
     newFavorites.splice(index, 1);
-    setFavorites(newFavorites); 
+    setFavorites(newFavorites);
   };
 
+  const [theme, setTheme] = useState(themes.light);
+
+  const changeTheme = () => {
+    setTheme(theme === themes.light ? themes.dark : themes.light);
+  };
 
   return (
-    <FavListContext.Provider value={{ favorites, addToFavorites, removeFromFavorites }}>
-    <div className="app-container">
-      <form className="note-form">
-        <div>
-          <input placeholder="Note Title"></input>
-        </div>
-
-        <div>
-          <textarea></textarea>
-        </div>
-
-        <div>
-          <button type="submit">Create Note</button>
-        </div>
-
-        
-        <FavoriteList favorites={favorites}/>
-        
-      </form>
-
-      <div className="notes-grid">
-        {dummyNotesList.map((note) => (
-          <div key={note.id} className="note-item">
-            <div className="notes-header">
-              <FavoriteButton title={note.title}/>
-              <button>x</button>
+    <FavListContext.Provider
+      value={{ favorites, addToFavorites, removeFromFavorites }}
+    >
+      {/* context for favorite button and favorite list */}
+      <ThemeContext.Provider value={theme}>
+        <div
+          style={{
+            background: theme.mainBackground,
+            color: theme.mainForeground,
+          }}
+          className="app-container"
+        >
+          <form className="note-form">
+            <div>
+              <input placeholder="Note Title"></input>
             </div>
-            <h2> {note.title} </h2>
-            <p> {note.content} </p>
-            <p> {note.label} </p>
-          </div>
-        ))}
-      </div>
 
-      <ToggleTheme />
-    </div>
+            <div>
+              <textarea></textarea>
+            </div>
+
+            <div>
+              <button type="submit">Create Note</button>
+            </div>
+
+            <FavoriteList />
+          </form>
+
+          <div className="notes-grid">
+            {dummyNotesList.map((note) => (
+              <div
+                style={{
+                  background: theme.subBackground,
+                  color: theme.subForeground,
+                }}
+                key={note.id}
+                className="note-item"
+              >
+                <div className="notes-header">
+                  <FavoriteButton title={note.title} />
+                  <button>x</button>
+                </div>
+                <h2> {note.title} </h2>
+                <p> {note.content} </p>
+                <p> {note.label} </p>
+              </div>
+            ))}
+          </div>
+          <button onClick={changeTheme}> Toggle Theme </button>
+        </div>
+      </ThemeContext.Provider>
     </FavListContext.Provider>
   );
 }

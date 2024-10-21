@@ -12,15 +12,15 @@ function ClickCounter() {
   return (
     <div
       style={{
-        background: theme.background,
-        color: theme.foreground,
+        background: theme.mainBackground,
+        color: theme.mainForeground,
         padding: "20px",
       }}
     >
       <p>You clicked {count} times </p>
       <button
         onClick={() => setCount(count + 1)}
-        style={{ background: theme.foreground, color: theme.background }}
+        style={{ background: theme.mainForeground, color: theme.mainBackground }}
       >
         Click me
       </button>
