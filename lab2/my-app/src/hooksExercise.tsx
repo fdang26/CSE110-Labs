@@ -1,28 +1,14 @@
-// function ClickCounter() {
-//   let count = 0;
-
-//   const handleClick = () => {
-//     count += 1;
-//     console.log("Count:", count);
-//   };
-
-//   return (
-//     <div>
-//       <p>Clicks: {count}</p>
-//       <button onClick={handleClick}>Click me!</button>
-//     </div>
-//   );
-// }
 import React, { useEffect, useState, useContext } from "react";
 import { ThemeContext, themes } from "./themeContext";
 function ClickCounter() {
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    document.title = `You clicked ${count} times`;
-  }, [count]);
+  // useEffect(() => {
+  //   document.title = `You clicked ${count} times`;
+  // }, [count]);
 
-  const theme = useContext(ThemeContext);
+  const theme = useContext(ThemeContext); // Access to the "currentTheme" given by Toggle wrapper
+  
   return (
     <div
       style={{
@@ -43,6 +29,7 @@ function ClickCounter() {
 }
 
 // Wrapper component to provide context
+// Ignore above comment: now 
 function ToggleTheme() {
   const [currentTheme, setCurrentTheme] = useState(themes.light);
 

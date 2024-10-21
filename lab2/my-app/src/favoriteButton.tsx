@@ -7,19 +7,16 @@ interface FavoriteButtonProps {
 
 function FavoriteButton({title}:FavoriteButtonProps) {
     const [buttonImage, setButtonImage] = useState("img/heart-stockphoto-outline.jpg");
-    const [isFavorited, setIsFavorited] = useState(false);
     const { favorites, addToFavorites, removeFromFavorites } = useContext(FavListContext);
     const switchImage = () => {
       // If unfavorited then favorite
         if(buttonImage === "img/heart-stockphoto-outline.jpg") {
-            setButtonImage("img/heart-stockphoto.jpg");
-            setIsFavorited(false);
-            addToFavorites(title)
+            addToFavorites(title); // Context
+            setButtonImage("img/heart-stockphoto.jpg"); // State
           } else {
             // If favorited then unfavorite
-            removeFromFavorites(title)
-            setButtonImage("img/heart-stockphoto-outline.jpg");
-            setIsFavorited(true);
+            removeFromFavorites(title); // Context
+            setButtonImage("img/heart-stockphoto-outline.jpg"); // State
         }
     };
   
