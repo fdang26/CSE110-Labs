@@ -9,10 +9,13 @@ import { FavListContext } from "./favListContext";
 import { ThemeContext, themes } from "./themeContext";
 
 function App() {
-  // first implement onclick for each note, then for each onclick, update selectedNote state variable to contain that notes information and populate the form
-  // fields with the notes contents (with having an empty note by default (useState(emptyNote))); there should be a flag based on whether the id of
-  // is -1 or not (creating or updating) that impacts whether the onSubmit should create new or replace old
-  // to replace old find the note in the list through the id and then place the new note into that spot
+  // First implement onclick for each note, then for each onclick, update selectedNote 
+  // state variable to contain that notes information and populate the form
+  // fields with the notes contents (with having an empty note by default (useState(emptyNote)))
+  // there should be a flag based on whether the id of is -1 or not (creating or updating)
+  // that impacts whether the onSubmit should create new or replace old
+  // To replace old find the note in the list through the id and then place the new note into
+  // that spot
 
   // Favoriting and favorites list: state(list of favorites) and methods to add and remove
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -46,48 +49,26 @@ function App() {
   };
 
   const [notes, setNotes] = useState(dummyNotesList); 
-  const [createNote, setCreateNote] = useState(initialNote);
+  // const [createNote, setCreateNote] = useState(initialNote);
   const [selectedNote, setSelectedNote] = useState<Note>(initialNote);
 
   const createNoteHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("title: ", createNote.title);
-    console.log("content: ", createNote.content);
-    createNote.id = notes.length + 1;
-    setNotes([createNote, ...notes]);
-    setCreateNote(initialNote);
+    if(selectedNote.id === -1) { // If this note is a new note, aka not a selected note
+      // setSelectedNote({...selectedNote, id: notes.length + 1});
+      selectedNote.id = notes.length + 1;
+      setNotes([selectedNote, ...notes]);
+      console.log(selectedNote);
+    } else { // If this note is a selected note and should replace not append
+      const indexOfSelectedNote = notes.findIndex((note) => note.id === selectedNote.id)
+      let notesCopy = notes;
+      notesCopy.splice(indexOfSelectedNote, 1, selectedNote);
+      setNotes(notesCopy);
+      console.log("replaced!");
+      console.log(notes);
+    }
+    setSelectedNote(initialNote);
   };
-
-  // const trackChanges = (e:React.FormEvent<HTMLDivElement>, id:number) => {
-  //   const { tagName, innerText, className } = e.target as HTMLElement;
-  //   var savedTitle = "";
-  //   const newNotes = notes.map((note) => {
-  //     if (note.id === id) {
-  //       if (tagName === "H2") {
-  //         savedTitle = note.title;
-  //         return { ...note, title: innerText };
-  //       } else if ((tagName === "P") && (className === "noteContent")) {
-  //         return { ...note, content: innerText };
-  //       } else if ((tagName === "P") && (className === "noteLabel")) {
-  //         return { ...note, label: innerText as Label };
-  //       } else {
-  //         return note;
-  //       }
-  //     } else {
-  //       return note;
-  //     }
-  //   });
-
-  //   setNotes(newNotes);
-
-  //   const potentialFavoritedNote = newNotes.find(note => note.id === id);
-  //   if(potentialFavoritedNote){
-  //     if(favorites.includes(savedTitle)){
-  //       removeFromFavorites(savedTitle);
-  //       addToFavorites(potentialFavoritedNote.title);
-  //     }
-  //   }
-  // }
 
   // Removes the note from the list of notes and from the favorites list if its also in there
   const deleteNoteHandler = (id: number) => {
@@ -104,6 +85,10 @@ function App() {
       setSelectedNote(selected);
     }
   }
+  const resetSelectionHandler = () => {
+    setSelectedNote(initialNote);
+  }
+
   /** --------------- JSX Below -------------------*/
   return (
     <FavListContext.Provider
@@ -121,9 +106,9 @@ function App() {
           <form className="note-form" onSubmit={createNoteHandler}>
             <div>
               <input
+                value={selectedNote.title}
                 placeholder="Note Title"
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, title: event.target.value })}
+                onChange={(e) => setSelectedNote({...selectedNote, title: e.target.value})}
                 required>
               </input>
             </div>
@@ -131,16 +116,16 @@ function App() {
 
             <div>
               <textarea
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, content: event.target.value })}
+                value={selectedNote.content}
+                onChange={(e) => setSelectedNote({...selectedNote, content: e.target.value})}
                 required>
               </textarea>
             </div>
             
             <div>
               <select
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, label: event.target.value as Label})} 
+                value={selectedNote.label}
+                onChange={(e) => setSelectedNote({...selectedNote, label: e.target.value as Label})}
                   // typecasting safe since the only options available below are Label values
                 required>
                 <option value={Label.personal}>Personal</option>
@@ -149,7 +134,8 @@ function App() {
                 <option value={Label.other}>Other</option>
               </select>
             </div>
-            <div><button type="submit">Create Note</button></div>
+            <div><button type="submit">Create/Update Note</button></div>
+            <div><button type="reset" onClick={resetSelectionHandler}>Clear Fields</button></div>
             <FavoriteList />
           </form>
 
