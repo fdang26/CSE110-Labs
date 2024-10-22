@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 export const FavListContext = createContext({
-  favorites: [] as string[], 
-  addToFavorites: (noteTitle: string) => {},
-  removeFromFavorites: (noteTitle: string) => {},
+  favorites: [] as number[], 
+  addToFavorites: (noteId: number) => {},
+  removeFromFavorites: (noteId: number) => {},
 });

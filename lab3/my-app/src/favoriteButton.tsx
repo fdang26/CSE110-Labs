@@ -2,10 +2,10 @@ import { useState, useContext } from "react";
 import { FavListContext } from "./favListContext";
 
 interface FavoriteButtonProps {
-  title: string;
+  id: number;
 }
 
-function FavoriteButton({ title }: FavoriteButtonProps) {
+function FavoriteButton({ id }: FavoriteButtonProps) {
   const [buttonImage, setButtonImage] = useState(
     "img/heart-stockphoto-outline.jpg"
   );
@@ -13,11 +13,11 @@ function FavoriteButton({ title }: FavoriteButtonProps) {
   const switchImage = () => {
     // If unfavorited then favorite
     if (buttonImage === "img/heart-stockphoto-outline.jpg") {
-      addToFavorites(title); // Context
+      addToFavorites(id); // Context
       setButtonImage("img/heart-stockphoto.jpg"); // State
     } else {
       // If favorited then unfavorite
-      removeFromFavorites(title); // Context
+      removeFromFavorites(id); // Context
       setButtonImage("img/heart-stockphoto-outline.jpg"); // State
     }
   };

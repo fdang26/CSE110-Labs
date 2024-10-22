@@ -10,17 +10,17 @@ import { ThemeContext, themes } from "./themeContext";
 
 function StickyNotes() {
   // Favoriting and favorites list: state(list of favorites) and methods to add and remove
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
 
-  const addToFavorites = (noteTitle: string) => {
+  const addToFavorites = (noteId: number) => {
     const newFavorites = [...favorites];
-    newFavorites.push(noteTitle);
+    newFavorites.push(noteId);
     setFavorites(newFavorites);
   };
 
-  const removeFromFavorites = (noteTitle: string) => {
+  const removeFromFavorites = (noteId: number) => {
     const newFavorites = [...favorites];
-    const index = newFavorites.indexOf(noteTitle);
+    const index = newFavorites.indexOf(noteId);
     newFavorites.splice(index, 1);
     setFavorites(newFavorites);
   };
@@ -41,52 +41,44 @@ function StickyNotes() {
   };
 
   const [notes, setNotes] = useState(dummyNotesList); 
-  const [createNote, setCreateNote] = useState(initialNote);
+  // const [createNote, setCreateNote] = useState(initialNote);
+  const [selectedNote, setSelectedNote] = useState<Note>(initialNote);
 
   const createNoteHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("title: ", createNote.title);
-    console.log("content: ", createNote.content);
-    createNote.id = notes.length + 1;
-    setNotes([createNote, ...notes]);
-    setCreateNote(initialNote);
+    if(selectedNote.id === -1) { // If this note is a new note, aka not a selected note
+      // setSelectedNote({...selectedNote, id: notes.length + 1});
+      selectedNote.id = notes.length + 1;
+      setNotes([selectedNote, ...notes]);
+      console.log(selectedNote);
+    } else { // If this note is a selected note and should replace not append
+      const indexOfSelectedNote = notes.findIndex((note) => note.id === selectedNote.id)
+      let notesCopy = notes;
+      notesCopy.splice(indexOfSelectedNote, 1, selectedNote);
+      setNotes(notesCopy);
+      console.log("replaced!");
+      console.log(notes);
+    }
+    setSelectedNote(initialNote);
   };
 
-  const trackChanges = (e:React.FormEvent<HTMLDivElement>, id:number) => {
-    const { tagName, innerText, className } = e.target as HTMLElement;
-    var savedTitle = "";
-    const newNotes = notes.map((note) => {
-      if (note.id === id) {
-        if (tagName === "H2") {
-          savedTitle = note.title;
-          return { ...note, title: innerText };
-        } else if ((tagName === "P") && (className === "noteContent")) {
-          return { ...note, content: innerText };
-        } else if ((tagName === "P") && (className === "noteLabel")) {
-          return { ...note, label: innerText as Label };
-        } else {
-          return note;
-        }
-      } else {
-        return note;
-      }
-    });
-
-    setNotes(newNotes);
-
-    const potentialFavoritedNote = newNotes.find(note => note.id === id);
-    if(potentialFavoritedNote){
-      if(favorites.includes(savedTitle)){
-        removeFromFavorites(savedTitle);
-        addToFavorites(potentialFavoritedNote.title);
-      }
-    }
-  }
-
+  // Removes the note from the list of notes and from the favorites list if its also in there
   const deleteNoteHandler = (id: number) => {
+    removeFromFavorites(id);
     setNotes(notes.filter((note) => note.id !== id));
   }
-  /**-------------------------JSX-------------------------*/
+
+  const noteSelectionHandler = (id:number) => {
+    const selected = notes.find((note) => note.id === id);
+    if(selected) {
+      setSelectedNote(selected);
+    }
+  }
+  const resetSelectionHandler = () => {
+    setSelectedNote(initialNote);
+  }
+
+  /** --------------- JSX Below -------------------*/
   return (
     <FavListContext.Provider
       value={{ favorites, addToFavorites, removeFromFavorites }}
@@ -103,9 +95,9 @@ function StickyNotes() {
           <form className="note-form" onSubmit={createNoteHandler}>
             <div>
               <input
+                value={selectedNote.title}
                 placeholder="Note Title"
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, title: event.target.value })}
+                onChange={(e) => setSelectedNote({...selectedNote, title: e.target.value})}
                 required>
               </input>
             </div>
@@ -113,17 +105,16 @@ function StickyNotes() {
 
             <div>
               <textarea
-                placeholder="Note Content"
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, content: event.target.value })}
+                value={selectedNote.content}
+                onChange={(e) => setSelectedNote({...selectedNote, content: e.target.value})}
                 required>
               </textarea>
             </div>
             
             <div>
               <select
-                onChange={(event) =>
-                  setCreateNote({ ...createNote, label: event.target.value as Label})} 
+                value={selectedNote.label}
+                onChange={(e) => setSelectedNote({...selectedNote, label: e.target.value as Label})}
                   // typecasting safe since the only options available below are Label values
                 required>
                 <option value={Label.personal}>Personal</option>
@@ -132,8 +123,9 @@ function StickyNotes() {
                 <option value={Label.other}>Other</option>
               </select>
             </div>
-            <div><button type="submit">Create Note</button></div>
-            <FavoriteList />
+            <div><button type="submit">Create/Update Note</button></div>
+            <div><button type="reset" onClick={resetSelectionHandler}>Clear Fields</button></div>
+            <FavoriteList notesList={notes} />
           </form>
 
           <div className="notes-grid">
@@ -147,13 +139,13 @@ function StickyNotes() {
                 className="note-item"
               >
                 <div className="notes-header">
-                  <FavoriteButton title={note.title} />
+                  <FavoriteButton id={note.id} />
                   <button onClick={() => deleteNoteHandler(note.id)}>x</button>
                 </div>
-                <div contentEditable="true" onInput={(e)=>trackChanges(e, note.id)}>
-                  <h2 contentEditable="true"> {note.title} </h2>
-                  <p contentEditable="true" className="noteContent"> {note.content} </p>
-                  <p contentEditable="true" className="noteLabel"> {note.label} </p>
+                <div>
+                  <h2 onClick={(e)=>noteSelectionHandler(note.id)}> {note.title} </h2>
+                  <p onClick={(e)=>noteSelectionHandler(note.id)} className="noteContent"> {note.content} </p>
+                  <p onClick={(e)=>noteSelectionHandler(note.id)} className="noteLabel"> {note.label} </p>
                 </div>
               </div>
             ))}
