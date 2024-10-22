@@ -47,6 +47,7 @@ function App() {
 
   const [notes, setNotes] = useState(dummyNotesList); 
   const [createNote, setCreateNote] = useState(initialNote);
+  const [selectedNote, setSelectedNote] = useState<Note>(initialNote);
 
   const createNoteHandler = (event: React.FormEvent) => {
     event.preventDefault();
@@ -57,36 +58,36 @@ function App() {
     setCreateNote(initialNote);
   };
 
-  const trackChanges = (e:React.FormEvent<HTMLDivElement>, id:number) => {
-    const { tagName, innerText, className } = e.target as HTMLElement;
-    var savedTitle = "";
-    const newNotes = notes.map((note) => {
-      if (note.id === id) {
-        if (tagName === "H2") {
-          savedTitle = note.title;
-          return { ...note, title: innerText };
-        } else if ((tagName === "P") && (className === "noteContent")) {
-          return { ...note, content: innerText };
-        } else if ((tagName === "P") && (className === "noteLabel")) {
-          return { ...note, label: innerText as Label };
-        } else {
-          return note;
-        }
-      } else {
-        return note;
-      }
-    });
+  // const trackChanges = (e:React.FormEvent<HTMLDivElement>, id:number) => {
+  //   const { tagName, innerText, className } = e.target as HTMLElement;
+  //   var savedTitle = "";
+  //   const newNotes = notes.map((note) => {
+  //     if (note.id === id) {
+  //       if (tagName === "H2") {
+  //         savedTitle = note.title;
+  //         return { ...note, title: innerText };
+  //       } else if ((tagName === "P") && (className === "noteContent")) {
+  //         return { ...note, content: innerText };
+  //       } else if ((tagName === "P") && (className === "noteLabel")) {
+  //         return { ...note, label: innerText as Label };
+  //       } else {
+  //         return note;
+  //       }
+  //     } else {
+  //       return note;
+  //     }
+  //   });
 
-    setNotes(newNotes);
+  //   setNotes(newNotes);
 
-    const potentialFavoritedNote = newNotes.find(note => note.id === id);
-    if(potentialFavoritedNote){
-      if(favorites.includes(savedTitle)){
-        removeFromFavorites(savedTitle);
-        addToFavorites(potentialFavoritedNote.title);
-      }
-    }
-  }
+  //   const potentialFavoritedNote = newNotes.find(note => note.id === id);
+  //   if(potentialFavoritedNote){
+  //     if(favorites.includes(savedTitle)){
+  //       removeFromFavorites(savedTitle);
+  //       addToFavorites(potentialFavoritedNote.title);
+  //     }
+  //   }
+  // }
 
   // Removes the note from the list of notes and from the favorites list if its also in there
   const deleteNoteHandler = (id: number) => {
@@ -97,6 +98,12 @@ function App() {
     setNotes(notes.filter((note) => note.id !== id));
   }
 
+  const noteSelectionHandler = (id:number) => {
+    const selected = notes.find((note) => note.id === id);
+    if(selected) {
+      setSelectedNote(selected);
+    }
+  }
   /** --------------- JSX Below -------------------*/
   return (
     <FavListContext.Provider
@@ -160,10 +167,10 @@ function App() {
                   <FavoriteButton title={note.title} />
                   <button onClick={() => deleteNoteHandler(note.id)}>x</button>
                 </div>
-                <div contentEditable="true" onInput={(e)=>trackChanges(e, note.id)}>
-                  <h2 contentEditable="true"> {note.title} </h2>
-                  <p contentEditable="true" className="noteContent"> {note.content} </p>
-                  <p contentEditable="true" className="noteLabel"> {note.label} </p>
+                <div>
+                  <h2 onClick={(e)=>noteSelectionHandler(note.id)}> {note.title} </h2>
+                  <p onClick={(e)=>noteSelectionHandler(note.id)} className="noteContent"> {note.content} </p>
+                  <p onClick={(e)=>noteSelectionHandler(note.id)} className="noteLabel"> {note.label} </p>
                 </div>
               </div>
             ))}

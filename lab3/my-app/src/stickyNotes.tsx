@@ -86,7 +86,7 @@ function StickyNotes() {
   const deleteNoteHandler = (id: number) => {
     setNotes(notes.filter((note) => note.id !== id));
   }
-  // JSX
+  /**-------------------------JSX-------------------------*/
   return (
     <FavListContext.Provider
       value={{ favorites, addToFavorites, removeFromFavorites }}
