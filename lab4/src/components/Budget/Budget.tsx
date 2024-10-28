@@ -6,7 +6,7 @@ const Budget = () => {
 
   return (
     <div className="alert alert-secondary p-3 d-flex align-items-center justify-content-between">
-      <div>Budget: ${budget}</div>
+      <div data-testid="Budget">Budget: ${budget}</div>
     </div>
   );
 };
