@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { FavListContext } from "./favListContext";
 import { Note } from "./types"
+
 interface FavoriteListProps {
   notesList: Note[]
 }
+
 function FavoriteList( props: FavoriteListProps) {
   const { favorites } = useContext(FavListContext);
   const notes = props.notesList
