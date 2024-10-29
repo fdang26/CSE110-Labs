@@ -24,6 +24,8 @@ const AddExpenseForm = () => {
     
   };
 
+  
+
   return (
     <form onSubmit={(event) => onSubmit(event)}>
       <div className="row">
@@ -35,6 +37,7 @@ const AddExpenseForm = () => {
             className="form-control"
             id="name"
             value={nameInput}
+            placeholder = "Expense name"
             onChange={(e) => setNameInput(e.target.value)}
           ></input>
         </div>
@@ -46,11 +49,12 @@ const AddExpenseForm = () => {
             className="form-control"
             id="cost"
             value={costInput}
+            placeholder = "Expense cost"
             onChange={(e) => setCostInput(e.target.value)}
           ></input>
         </div>
         <div className="col-sm">
-          <button type="submit" className="btn btn-primary mt-3">
+          <button type="submit" className="btn btn-primary mt-3" aria-placeholder="save" title = "save">
             Save
           </button>
         </div>
