@@ -22,7 +22,6 @@ describe("Budget tracker", () => {
 
     const expenseName = screen.getByText("groceries");
     const expenseCost = screen.getByText("$302");
-
     expect(expenseName).toBeInTheDocument();
     expect(expenseCost).toBeInTheDocument();
 
@@ -129,6 +128,5 @@ describe("Budget tracker", () => {
       "Remaining: $2000"
     );
     expect(screen.getByTestId("Total")).toHaveTextContent("Spent so far: $0");
-
   });
 });
