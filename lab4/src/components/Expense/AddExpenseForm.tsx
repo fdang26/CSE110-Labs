@@ -23,8 +23,6 @@ const AddExpenseForm = () => {
     context.setExpenses(expenseList);
   };
 
-  
-
   return (
     <form onSubmit={(event) => onSubmit(event)}>
       <div className="row">
@@ -36,7 +34,7 @@ const AddExpenseForm = () => {
             className="form-control"
             id="name"
             value={nameInput}
-            placeholder = "Expense name"
+            placeholder="Expense name"
             onChange={(e) => setNameInput(e.target.value)}
           ></input>
         </div>
@@ -53,7 +51,7 @@ const AddExpenseForm = () => {
           ></input>
         </div>
         <div className="col-sm">
-          <button type="submit" className="btn btn-primary mt-3" aria-placeholder="save" title = "save">
+          <button type="submit" className="btn btn-primary mt-3">
             Save
           </button>
         </div>
@@ -61,3 +59,5 @@ const AddExpenseForm = () => {
     </form>
   );
 };
+
+export default AddExpenseForm;

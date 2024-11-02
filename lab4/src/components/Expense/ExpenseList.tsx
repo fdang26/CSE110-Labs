@@ -6,7 +6,6 @@ import { Expense } from "../../types/types";
 const ExpenseList = () => {
   const { expenses } = useContext(AppContext);
 
-  
   return (
     <ul className="list-group">
       {expenses.map((expense: Expense) => (
