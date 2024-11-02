@@ -1,0 +1,55 @@
+Create Expense:
+
+Render the page
+
+retrieve the expense form
+
+create a new entry with [groceries, 302]
+
+check to see if the new expense is displayed in the list
+
+check that the budgeting values are all updated accordingly
+
+
+Delete expense:
+
+Render the page
+
+retrieve the expense form
+
+create a new entry with [groceries, 302]
+
+check to see if new expense is displayed
+
+check that the budgeting values have changed correctly
+
+get the delete button of the entry, then click the button
+
+check to see that the expense listing is not there anymore
+
+check that check that the budgeting values have been updated
+
+
+Budget balance verification:
+
+Render the page
+
+retrieve the expense form
+
+check that the initial budgeting values are correct
+
+create a new entry with [groceries, 302]
+
+check if the budgeting values have changed correctly
+
+create a second entry
+
+check if the budgeting values have changed correctly
+
+retreive the X button from the second list item and delete the second entry
+
+check if the budgeting values have changed correctly
+
+retreive the X button from the first list item and delete the first entry
+
+check if the budgeting values have changed correctly
