@@ -20,10 +20,10 @@ jobs: # the things being executed
        run: npm test # the actual testing line
      # Lab 3
      - name: Install Dependencies for Lab 3
-       working-directory: ./lab3
+       working-directory: ./lab3/my-app
        run: npm install
      - name: Unit Test for Lab 3
-       working-directory: ./lab3
+       working-directory: ./lab3/my-app
        run: npm test # the actual testing line
      # Lab 4
      - name: Install Dependencies for Lab 4
