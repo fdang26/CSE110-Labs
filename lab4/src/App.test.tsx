@@ -131,3 +131,12 @@ describe("Budget tracker", () => {
   });
 });
 
+describe("purposefully failed test", () => {
+  test("test", () => {
+    render(<App />);
+    
+    const newExpenseNameInput = screen.getByPlaceholderText("Expense name");
+    expect(newExpenseNameInput).not.toBeInTheDocument();
+  })
+} )
+
